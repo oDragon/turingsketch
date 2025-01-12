@@ -7,11 +7,19 @@ from PIL import Image
 from io import BytesIO
 import asyncio
 import aiohttp
+from images import is_first_player, upload_image_to_db, delete_previous_round
 
 def play():
     # Update the screen state to "play"
     st.session_state.screen = "play"
     st.session_state.prompt = random.choice(prompts)
+    if is_first_player() == True:
+        delete_previous_round()
+        upload_image_to_db(st.session_state.prompt, None)
+    else:
+        upload_image_to_db(st.session_state.prompt, None)
+    
+        
 
 def done():
     st.session_state.screen = "guess"
