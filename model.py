@@ -41,9 +41,9 @@ def delete_previous_round():
         cursor.close()
         connection.close()
 
-        st.success("Previous round replaced successfully!")
+        print("Previous round replaced successfully!")
     except Exception as e:
-        st.error(f"Error deleting previous round: {e}")
+        st.error(f"Error deleting previous records: {e}")
 
 
 # Function to upload new image (new round)
@@ -61,7 +61,7 @@ def upload_image_to_db(prompt1, image_data1):
         cursor.close()
         connection.close()
 
-        st.success("New round uploaded successfully!")
+        print("New round uploaded successfully!")
     except Exception as e:
         st.error(f"Error uploading new round: {e}")
 

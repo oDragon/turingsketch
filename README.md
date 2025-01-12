@@ -1,6 +1,6 @@
-# [NAME]
+# TuringSketch
 
-In [NAME], players face off in a Turing Test-inspired game with a creative twist, reminiscent of [skribbl.io](https://skribbl.io/)!
+In TuringSketch, players face off in a Turing Test-inspired game with a creative twist, reminiscent of [skribbl.io](https://skribbl.io/)!
 
 Each player receives a different prompt to draw something within 30 seconds. Meanwhile, an AI creates its own drawings based on the same prompts. When the timer runs out, players are shown the drawing their opponent made along with the AI's corresponding drawing. The challenge? Guess which image was created by the AI and which one was drawn by a human!
 
@@ -64,8 +64,8 @@ We're proud of successfully integrating image generation into our game, adding a
 ## What We Learned
 Throughout this process, we gained valuable hands-on experience working with APIs and image generation models.  We also learned how to combine back end and front end logic using streamlit, python, and Azure SQL Server.
 
-## What's next for [NAME]
-Currently, [NAME] supports only two players at a time.  Our next steps include expanding to support multiple game sessions, custom rooms, and a friends system for a more dynamic experience.
+## What's next for TuringSketch
+Currently, TuringSketch supports only two players at a time.  Our next steps include expanding to support multiple game sessions, custom rooms, and a friends system for a more dynamic experience.
 
 ## Technologies Used
 Python, Streamlit, Azure MSSQL, pollinations.ai

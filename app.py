@@ -6,16 +6,25 @@ import requests
 from PIL import Image
 from io import BytesIO
 import time
-from streamlit.components.v1 import html
 import numpy as np
 import base64
-import asyncio
-import aiohttp
 from model import is_first_player, upload_image_to_db, delete_previous_round, fetch_images_from_db
 
 # Page icon
-#icon = Image.open('img/streamlit-mark-light.png')
+icon = Image.open('assets/logo-small.png')
 
+st.set_page_config(
+        page_title="TuringSketch",
+        page_icon=icon
+    )
+
+page_bg_img = """
+    <style>
+    background-color: #f7f7f7;
+    </style>
+    """
+st.markdown(page_bg_img, unsafe_allow_html=True)
+# Set page title
 def play():
     # Update the screen state to "play"
     st.session_state.screen = "play"
@@ -24,7 +33,40 @@ def play():
         delete_previous_round()
         upload_image_to_db(st.session_state.prompt, None)
         if "start_time" not in st.session_state:
-            st.write("searching for players...")
+            
+            # Loading gif
+            # Create nine columns
+            col1, col2, col3, col4, col5, col6, col7, col8, col9 = st.columns(9)
+            # Add widgets to each column
+            with col1:
+                pass
+            with col2:
+                pass
+            with col3:
+                pass
+            with col4:
+                pass
+            with col5:
+                file_ = open("assets/loading.gif", "rb")
+                contents = file_.read()
+                data_url = base64.b64encode(contents).decode("utf-8")
+                file_.close()
+
+                st.markdown(
+                    f'<img src="data:image/gif;base64,{data_url}" alt="loading circle" style="width: 50px;">',
+                    unsafe_allow_html=True,
+                )
+            with col6:
+                pass
+            with col7:
+                pass
+            with col8:
+                pass
+            with col9:
+                pass
+
+            st.markdown("<p style='text-align: center;'>Searching for players...</p>", unsafe_allow_html=True)
+            st.divider()
             while True:
                 time.sleep(1)
                 if is_first_player() == True:
@@ -38,16 +80,47 @@ def play():
             st.session_state.prompt = random.choice(prompts)
         upload_image_to_db(st.session_state.prompt, None)
         st.session_state.start_timer = True
-    
+
 def main():
     logo = Image.open("assets/logo.png")
     st.image(logo)
+
     # Initialize the screen in session state
     if "screen" not in st.session_state:
         st.session_state.screen = "home"
 
     if st.session_state.screen == "home":
-        st.button(label="Play", on_click=play)
+        st.markdown("<p style='text-align: center;'>Welcome to TuringSketch! The game where you have to guess which drawing was made by AI.</p>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; color: red;'>Rules</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center;'>You will be placed into a match against another player.</p>"
+                "<p style='text-align: center;'>You will be given a prompt to draw.</p>"
+                "<p style='text-align: center;'>After drawing, you will be shown two images: one drawn by AI and one drawn by a human.</p>"
+                "<p style='text-align: center;'>Your task is to guess which image was drawn by AI.</p>", unsafe_allow_html=True)
+        
+
+        # Create seven columns
+        col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+        # Add widgets to each column
+        with col1:
+            pass
+        with col2:
+            pass
+        with col3:
+            pass
+        with col4:
+            if 'button_clicked' not in st.session_state:
+                st.session_state.button_clicked = False
+
+                st.button(label="Play", on_click=play, disabled=st.session_state.button_clicked)
+                st.session_state.button_clicked = True
+            else:
+                st.write('Button is disabled.')
+        with col5:
+            pass
+        with col6:
+            pass
+        with col7:
+            pass
 
     elif st.session_state.screen == "play":
 
@@ -78,57 +151,6 @@ def main():
             key="canvas",
         )
 
-        my_html = """
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-                height: 50%;
-            }
-            #timer-container {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                width: 100%;
-                margin: 0;  /* Remove extra space at the top */
-                padding: 0; /* Remove padding if any */
-            }
-        </style>
-        <script>
-        function startTimer(duration, display) {
-            var timer = duration, minutes, seconds;
-            var interval = setInterval(function () {
-                minutes = parseInt(timer / 60, 10)
-                seconds = parseInt(timer % 60, 10);
-
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                display.textContent = minutes + ":" + seconds;
-
-                if (--timer < 0) {
-                    clearInterval(interval);
-                }
-            }, 1000);
-        }
-
-        window.onload = function () {
-            var timeLimit = 30,
-                display = document.querySelector('#time');
-            startTimer(timeLimit, display);
-        };
-        </script>
-
-        <body>
-            <div>Time left: <span id="time">00:30</span></div>
-        </form>
-        </body>
-        """
-
-        if "start_timer" in st.session_state:
-            html(my_html)
-
         def to_blob(img):
             """Converts the dataclass instance to a BLOB."""
             image_data_blob = img.tobytes() if img is not None else None
@@ -137,7 +159,6 @@ def main():
         def done():
             st.session_state.screen = "guess"
             blob = to_blob(canvas_result.image_data)
-            
             upload_image_to_db(st.session_state.prompt, blob)
             
         st.button(label="Done", on_click=done)
@@ -146,10 +167,8 @@ def main():
         st.session_state.img = requests.get(url)
         
     elif st.session_state.screen == "guess":
-        st.title("which is AI?")
+        st.title("Which picture is made by AI?")
         
-        
-
         def from_blob(image_data_blob):
             """Reconstructs the dataclass from a BLOB."""
             image_data = np.frombuffer(image_data_blob, dtype=np.uint8).reshape(512, 512, 4) if image_data_blob else None
@@ -170,7 +189,7 @@ def main():
 
         ai_image = Image.open(BytesIO((st.session_state.otherImg).content))
         human_image = st.session_state.otherDrawing
-
+    
         # Put the images in two columns, randomized order
         col1, col2 = st.columns(2)
         rand = random.choice([0,1])
@@ -188,17 +207,41 @@ def main():
                 st.image(human_image)
             st.button(label="This is AI.", on_click=lambda: finish("right", ground_truth), key="right")
 
-
         def finish(answer, ground_truth):
             """
             Set the screen state to "finish" when the user clicks the button.
             Show the answers.
             """
             st.session_state.screen = "finish"
-            if answer == ground_truth:
-                st.write("Correct!")
-            else:
-                st.write("Incorrect!")
-            st.write(f"The AI drawing is on the {ground_truth}.")
+            st.session_state['answer'] = answer
+            st.session_state['ground_truth'] = ground_truth
+
+    elif st.session_state.screen == "finish":
+        ground_truth = st.session_state['ground_truth']
+        answer = st.session_state['answer']
+
+        if answer == ground_truth:
+            st.markdown("<p style='text-align: center;'>Correct!</p>", unsafe_allow_html=True)
+        else:
+            st.markdown("<p style='text-align: center;'>Incorrect!</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align: center;'>The AI drawing is on the {ground_truth}.</p>", unsafe_allow_html=True)
+
+        # Create seven columns
+        col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+        # Add widgets to each column
+        with col1:
+            pass
+        with col2:
+            pass
+        with col3:
+            pass
+        with col4:
+            st.button(label="Play Again", on_click=play)
+        with col5:
+            pass
+        with col6:
+            pass
+        with col7:
+            pass
 
 main()
