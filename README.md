@@ -10,7 +10,7 @@ This project was submitted to DeltaHacks XI!
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/oDragon/deltahacks11
+    git clone https://github.com/oDragon/turingsketch
     ```
 2. Navigate to the project directory:
     ```bash
