@@ -27,6 +27,9 @@ This project was submitted to DeltaHacks XI!
         prompt VARCHAR(MAX) NOT NULL,
         picture VARBINARY(MAX)
     )
+
+    INSERT INTO drawings(prompt)
+    VALUES (cat), (car)
     ```
 
 5. Create a `.env` file in the project directory with the following content:
