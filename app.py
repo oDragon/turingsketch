@@ -165,7 +165,7 @@ def main():
             
         st.button(label="Done", on_click=guess)
 
-        url = f"https://pollinations.ai/p/A poorly drawn black and white line art of a {st.session_state.prompt}, created in under 30 seconds by a 3 year old child. The drawing should use lines that are solid, wiggly, and hex code #000000. It should look like it was drawn in MSpaint, with no shading and no details. Only use simple shapes. The background color should be #FFFFFF. All lines should have the same width.?width=512&height=512"
+        url = f"https://pollinations.ai/p/A poorly drawn black and white line art of a {st.session_state.prompt}, created in under 30 seconds by a 3 year old child. The drawing should use lines that are solid, wiggly, and hex code #000000. It should look like it was drawn in MSpaint, with no shading and no details. Only use simple shapes. The background color should be #FFFFFF. All lines should have the same width.?width=512&height=512&seed={int(time.time)}&model=flux-pro"
         st.session_state.img = requests.get(url)
         
 
@@ -184,7 +184,7 @@ def main():
             images = fetch_images_from_db()
             for i, (prompt, image_data) in enumerate(images):
                 if prompt != st.session_state.prompt and "otherImg" not in st.session_state:
-                    url = f"https://pollinations.ai/p/A very poorly drawn black and white image of a {prompt}, created in under 30 seconds with minimal detail. The drawing should use rough, uneven lines, simple shapes, and only basic colors. It should look like it was drawn hurriedly in a basic MSpaint, with no shading or intricate features. The background is plain white.?width=512&height=512"
+                    url = f"https://pollinations.ai/p/A poorly drawn black and white line art of a {prompt}, created in under 30 seconds by a 3 year old child. The drawing should use lines that are solid, wiggly, and hex code #000000. It should look like it was drawn in MSpaint, with no shading and no details. Only use simple shapes. The background color should be #FFFFFF. All lines should have the same width.?width=512&height=512&seed={int(time.time)}&model=flux-pro"
                     # st.image(Image.open(BytesIO((requests.get(url)).content)))
                     st.session_state.otherImg = requests.get(url)
                 if prompt != st.session_state.prompt and image_data is not None and "otherDrawing" not in st.session_state:
