@@ -166,7 +166,7 @@ def main():
             
         st.button(label="Done", on_click=guess)
 
-        url = f"https://pollinations.ai/p/A simplistic black-and-white line drawing of a {st.session_state.prompt}, resembling a quick sketch by a 3-year-old child. The drawing should look hastily created in under 30 seconds, with solid, wiggly lines drawn in hex color #000000. It should have no shading, no details, and only simple shapes, as if made in MS Paint. The background must be a flat white color (#FFFFFF), and all lines should be uniform in width.?width=512&height=512&seed={int(time.time())%100}&model=flux-pro"
+        url = f"https://pollinations.ai/p/A simplistic black-and-white line drawing of a {st.session_state.prompt}, resembling a quick sketch by a 3-year-old child. The drawing should look hastily created in under 30 seconds, with solid, wiggly lines drawn in hex color #000000. It should have no shading, no details, and only simple shapes, as if made in MS Paint. The background must be a flat white color (#FFFFFF), and all lines should be uniform in width.?width=512&height=512&seed={random.randint(1, 100)}&model=flux"
         st.session_state.img = requests.get(url)
         
 
@@ -186,7 +186,7 @@ def main():
             
             for i, (prompt, image_data) in enumerate(images):
                 if prompt != st.session_state.prompt and "otherImg" not in st.session_state:
-                    url = f"https://pollinations.ai/p/A simplistic black-and-white line drawing of a {prompt}, resembling a quick sketch by a 3-year-old child. The drawing should look hastily created in under 30 seconds, with solid, wiggly lines drawn in hex color #000000. It should have no shading, no details, and only simple shapes, as if made in MS Paint. The background must be a flat white color (#FFFFFF), and all lines should be uniform in width.?width=512&height=512&seed={int(time.time())%100}&model=flux-pro"
+                    url = f"https://pollinations.ai/p/A simplistic black-and-white line drawing of a {prompt}, resembling a quick sketch by a 3-year-old child. The drawing should look hastily created in under 30 seconds, with solid, wiggly lines drawn in hex color #000000. It should have no shading, no details, and only simple shapes, as if made in MS Paint. The background must be a flat white color (#FFFFFF), and all lines should be uniform in width.?width=512&height=512&seed={random.randint(1, 100)}&model=flux"
                     # st.image(Image.open(BytesIO((requests.get(url)).content)))
                     st.session_state.otherImg = requests.get(url)
                 if prompt != st.session_state.prompt and image_data is not None and "otherDrawing" not in st.session_state:
