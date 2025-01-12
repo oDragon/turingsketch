@@ -56,8 +56,6 @@ We used Streamlit and Python for the app's front-end and back-end development.  
 ## Challenges we ran into
 We spent a long time searching for a free image generation API that could produce "low-quality MS Paint style" images.  At the same time, we were fine-tuning prompts to match this style across every API we tried.  Combining these two tasks led to double the time spent, and double the frustration!
 
-[TIMER]
-
 ## Accomplishments that we're proud of
 We're proud of successfully integrating image generation into our game, adding a unique twist to the traditional Turing Test.  Despite challenges in finding the right tools and APIs, we managed to overcome them and efficiently incorporate image generation and database management into the project.
 
