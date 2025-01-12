@@ -74,7 +74,6 @@ def play():
     else:
         images = fetch_images_from_db()
         otherPrompt = images[0].prompt
-        print(otherPrompt)
         while otherPrompt == st.session_state.prompt:
             st.session_state.prompt = random.choice(prompts)
         upload_image_to_db(st.session_state.prompt, None)
@@ -126,7 +125,7 @@ def main():
     #                   PLAY SCREEN                   #
     ###################################################
     elif st.session_state.screen == "play":
-        st.header("Prompt: " + st.session_state.prompt)
+        st.header(f"Draw a {st.session_state.prompt}!")
         
         # Drawing Tools
         col1, col2, col3 = st.columns(3)
