@@ -31,7 +31,6 @@ def delete_previous_round():
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        # Delete all entries in the Drawings table (clear previous round)
         cursor.execute("DELETE FROM Drawings")
         
         connection.commit()
@@ -41,6 +40,7 @@ def delete_previous_round():
         st.success("Previous round replaced successfully!")
     except Exception as e:
         st.error(f"Error deleting previous round: {e}")
+
 
 # Function to upload new round (new prompts and images)
 def upload_images_to_db(prompt1, image_data1, prompt2, image_data2):
@@ -62,6 +62,7 @@ def upload_images_to_db(prompt1, image_data1, prompt2, image_data2):
     except Exception as e:
         st.error(f"Error uploading new round: {e}")
 
+
 # Fetch Image and Prompt from the Database
 def fetch_images_from_db():
     try:
@@ -69,7 +70,7 @@ def fetch_images_from_db():
         cursor = connection.cursor()
 
         # Fetch the images and prompts
-        cursor.execute("SELECT prompt, image FROM drawings")
+        cursor.execute("SELECT prompt, picture FROM drawings")
         result = cursor.fetchall()
 
         cursor.close()
@@ -82,6 +83,7 @@ def fetch_images_from_db():
     except Exception as e:
         st.error(f"Error fetching images: {e}")
         return None
+
 
 # Streamlit Interface
 st.title("AI vs Human Drawings")
