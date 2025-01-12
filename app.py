@@ -25,6 +25,8 @@ def play():
     # Update the screen state to "play"
     st.session_state.screen = "play"
     st.session_state.prompt = random.choice(prompts)
+    st.session_state.otherImg = None
+    st.session_state.otherDrawing = None
 
     # If the player is the first player, delete the previous round and upload the new prompt
     if is_first_player() == True:
