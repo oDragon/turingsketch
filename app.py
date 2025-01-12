@@ -64,6 +64,12 @@ def play():
             st.markdown("<p style='text-align: center;'>Searching for players...</p>", unsafe_allow_html=True)
             st.divider()
 
+            while True:
+                time.sleep(1)
+                if is_first_player() == True:
+                    #st.session_state.start_timer = True
+                    break
+
     # If the player is the second player, fetch the images from the database
     else:
         images = fetch_images_from_db()
