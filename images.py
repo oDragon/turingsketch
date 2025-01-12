@@ -47,8 +47,8 @@ def delete_previous_round():
         st.error(f"Error deleting previous round: {e}")
 
 
-# Function to upload new images (new round)
-def upload_images_to_db(prompt1, image_data1, prompt2, image_data2):
+# Function to upload new image (new round)
+def upload_image_to_db(prompt1, image_data1):
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -56,8 +56,7 @@ def upload_images_to_db(prompt1, image_data1, prompt2, image_data2):
         # Insert new prompts and images for the new round
         cursor.execute("""
             INSERT INTO drawings (prompt, picture) VALUES (?, ?);
-            INSERT INTO Drawings (prompt, picture) VALUES (?, ?);
-        """, prompt1, image_data1, prompt2, image_data2)
+        """, prompt1, image_data1)
 
         connection.commit()
         cursor.close()
@@ -90,6 +89,15 @@ def fetch_images_from_db():
         return None
 
 
+def is_first_player():
+    """
+    Returns True if the number of images in the database is NOT 1, else False.
+    """
+    if len(fetch_images_from_db()) != 1:
+        return True
+    else:
+        return False
+
 # Streamlit Interface
 st.title("AI vs Human Drawings")
 
@@ -106,10 +114,9 @@ if st.button("Upload New Round"):
 
         # Convert the images to binary data
         image_data1 = uploaded_file1.read()
-        image_data2 = uploaded_file2.read()
 
         # Upload the new round's images and prompts
-        upload_images_to_db(prompt1, image_data1, prompt2, image_data2)
+        upload_image_to_db(prompt1, image_data1)
     else:
         st.error("Please provide both prompts and upload both images.")
 
