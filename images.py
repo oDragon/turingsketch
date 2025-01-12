@@ -1,13 +1,17 @@
 import streamlit as st
 import pyodbc
 from io import BytesIO
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Azure SQL Server configuration
 DB_CONFIG = {
-    'server': 'deltahacks2025.database.windows.net',
-    'database': 'deltahacks2025',
-    'username': 'deltahacks',
-    'password': 'password123!',
+    'server': os.getenv('DB_SERVER'),
+    'database': os.getenv('DB_NAME'),
+    'username': os.getenv('DB_USERNAME'),
+    'password': os.getenv('DB_PASSWORD'),
     'driver': '{ODBC Driver 17 for SQL Server}'
 }
 
