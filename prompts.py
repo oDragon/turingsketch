@@ -9,5 +9,6 @@ prompts = [
     "tooth",
     "thunderbolt",
     "star",
-    "heart"
+    "heart",
+    "donut"
 ]
