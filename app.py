@@ -28,6 +28,11 @@ def play():
                     st.session_state.start_timer = True
                     break
     else:
+        images = fetch_images_from_db()
+        otherPrompt = images[0].prompt
+        print(otherPrompt)
+        while otherPrompt == st.session_state.prompt:
+            st.session_state.prompt = random.choice(prompts)
         upload_image_to_db(st.session_state.prompt, None)
         st.session_state.start_timer = True
     
@@ -35,8 +40,6 @@ def main():
     # Initialize the screen in session state
     if "screen" not in st.session_state:
         st.session_state.screen = "home"
-    
-    temp = "no"
 
     if st.session_state.screen == "home":
         st.button(label="Play", on_click=play)
@@ -147,18 +150,23 @@ def main():
             image_data = np.frombuffer(image_data_blob, dtype=np.uint8).reshape(512, 512, 4) if image_data_blob else None
             return CanvasResult(image_data=image_data)
 
-        while "otherDrawing" not in st.session_state:
+        while "otherDrawing" not in st.session_state or "otherImg" not in st.session_state:
             images = fetch_images_from_db()
             for i, (prompt, image_data) in enumerate(images):
                 if prompt != st.session_state.prompt and "otherImg" not in st.session_state:
                     url = f"https://pollinations.ai/p/A very poorly drawn black and white image of a {prompt}, created in under 30 seconds with minimal detail. The drawing should use rough, uneven lines, simple shapes, and only basic colors. It should look like it was drawn hurriedly in a basic MSpaint, with no shading or intricate features. The background is plain white.?width=512&height=512"
-                    st.image(Image.open(BytesIO((requests.get(url)).content)))
-                    st.session_state.otherImg = True
-                if prompt != st.session_state.prompt and image_data is not None:
+                    # st.image(Image.open(BytesIO((requests.get(url)).content)))
+                    st.session_state.otherImg = requests.get(url)
+                if prompt != st.session_state.prompt and image_data is not None and "otherDrawing" not in st.session_state:
                     unblob = from_blob(image_data)
-                    print(unblob.image_data.shape)
-                    st.image(unblob.image_data)
-                    st.session_state.otherDrawing = True
+                    # st.image(unblob.image_data)
+                    st.session_state.otherDrawing = unblob.image_data
             time.sleep(1)
+        if random.random() < 0.5:  # 50% chance (random.random() returns a float between 0 and 1)
+            st.image(Image.open(BytesIO((st.session_state.otherImg).content)))
+            st.image(st.session_state.otherDrawing)
+        else:
+            st.image(st.session_state.otherDrawing)
+            st.image(Image.open(BytesIO((st.session_state.otherImg).content)))
         
 main()
