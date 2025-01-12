@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_drawable_canvas import st_canvas
+from streamlit_drawable_canvas import st_canvas, CanvasResult
 from prompts import prompts
 import random
 import requests
@@ -7,9 +7,11 @@ from PIL import Image
 from io import BytesIO
 import time
 from streamlit.components.v1 import html
+import numpy as np
+import base64
 import asyncio
 import aiohttp
-from images import is_first_player, upload_image_to_db, delete_previous_round
+from images import is_first_player, upload_image_to_db, delete_previous_round, fetch_images_from_db
 
 def play():
     # Update the screen state to "play"
@@ -28,20 +30,18 @@ def play():
     else:
         upload_image_to_db(st.session_state.prompt, None)
         st.session_state.start_timer = True
-
-def done():
-    st.session_state.screen = "guess"
-
+    
 def main():
     # Initialize the screen in session state
     if "screen" not in st.session_state:
         st.session_state.screen = "home"
     
+    temp = "no"
+
     if st.session_state.screen == "home":
         st.button(label="Play", on_click=play)
 
     elif st.session_state.screen == "play":
-        # print(prompt)
 
         st.header("Prompt: " + st.session_state.prompt)
         
@@ -121,21 +121,44 @@ def main():
         if "start_timer" in st.session_state:
             html(my_html)
 
+        def to_blob(img):
+            """Converts the dataclass instance to a BLOB."""
+            image_data_blob = img.tobytes() if img is not None else None
+            return image_data_blob
+
+        def done():
+            st.session_state.screen = "guess"
+            blob = to_blob(canvas_result.image_data)
+            
+            upload_image_to_db(st.session_state.prompt, blob)
+            
         st.button(label="Done", on_click=done)
 
         url = f"https://pollinations.ai/p/A very poorly drawn black and white image of a {st.session_state.prompt}, created in under 30 seconds with minimal detail. The drawing should use rough, uneven lines, simple shapes, and only basic colors. It should look like it was drawn hurriedly in a basic MSpaint, with no shading or intricate features. The background is plain white.?width=512&height=512"
         st.session_state.img = requests.get(url)
-
         
     elif st.session_state.screen == "guess":
         st.title("which is AI?")
+        
+        
 
-        image_bytes = BytesIO(st.session_state.img.content)
+        def from_blob(image_data_blob):
+            """Reconstructs the dataclass from a BLOB."""
+            image_data = np.frombuffer(image_data_blob, dtype=np.uint8).reshape(512, 512, 4) if image_data_blob else None
+            return CanvasResult(image_data=image_data)
 
-        # Optionally, open the image using PIL (not strictly necessary)
-        image = Image.open(image_bytes)
-
-        # Display the image in Streamlit
-        st.image(image)
+        while "otherDrawing" not in st.session_state:
+            images = fetch_images_from_db()
+            for i, (prompt, image_data) in enumerate(images):
+                if prompt != st.session_state.prompt and "otherImg" not in st.session_state:
+                    url = f"https://pollinations.ai/p/A very poorly drawn black and white image of a {prompt}, created in under 30 seconds with minimal detail. The drawing should use rough, uneven lines, simple shapes, and only basic colors. It should look like it was drawn hurriedly in a basic MSpaint, with no shading or intricate features. The background is plain white.?width=512&height=512"
+                    st.image(Image.open(BytesIO((requests.get(url)).content)))
+                    st.session_state.otherImg = True
+                if prompt != st.session_state.prompt and image_data is not None:
+                    unblob = from_blob(image_data)
+                    print(unblob.image_data.shape)
+                    st.image(unblob.image_data)
+                    st.session_state.otherDrawing = True
+            time.sleep(1)
         
 main()
