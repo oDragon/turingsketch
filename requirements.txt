@@ -1,3 +1,6 @@
-python-dotenv==1.0.1
+aiohttp==3.8.6
+Pillow==11.1.0
+pyodbc==5.2.0
 Requests==2.32.3
 streamlit==1.41.1
+streamlit_drawable_canvas==0.9.3

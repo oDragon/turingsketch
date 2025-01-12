@@ -25,12 +25,13 @@ def get_db_connection():
     return pyodbc.connect(connection_string)
 
 
-# Function to delete the previous round (removes existing rows)
+# Function to delete the previous round (removes all existing rows)
 def delete_previous_round():
     try:
         connection = get_db_connection()
         cursor = connection.cursor()
 
+        # Delete the existing rows in the table
         cursor.execute("DELETE FROM Drawings")
         
         connection.commit()
@@ -42,7 +43,7 @@ def delete_previous_round():
         st.error(f"Error deleting previous round: {e}")
 
 
-# Function to upload new round (new prompts and images)
+# Function to upload new images (new round)
 def upload_images_to_db(prompt1, image_data1, prompt2, image_data2):
     try:
         connection = get_db_connection()
@@ -94,6 +95,7 @@ prompt2 = st.text_input("Enter the second prompt for your drawing:")
 uploaded_file1 = st.file_uploader("Upload the first drawing image", type=["png", "jpg", "jpeg"])
 uploaded_file2 = st.file_uploader("Upload the second drawing image", type=["png", "jpg", "jpeg"])
 
+# If the "Upload New Round" button is clicked (button is created in-line)
 if st.button("Upload New Round"):
     if prompt1 and prompt2 and uploaded_file1 and uploaded_file2:
         # Delete the previous round first
@@ -108,8 +110,10 @@ if st.button("Upload New Round"):
     else:
         st.error("Please provide both prompts and upload both images.")
 
+# If the "Fetch New Round" button is clicked (button is created in-line)
+# Fetch the uploaded images and prompts 
 if st.button("Fetch New Round"):
-    # Fetch the images and prompts for the most recent round
+    # Fetch the images and prompts for the most recent round 
     images_and_prompts = fetch_images_from_db()
     if images_and_prompts:
         for i, (prompt, image_data) in enumerate(images_and_prompts):
