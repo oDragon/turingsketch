@@ -98,7 +98,6 @@ uploaded_file2 = st.file_uploader("Upload the second drawing image", type=["png"
 # If the "Upload New Round" button is clicked (button is created in-line)
 if st.button("Upload New Round"):
     if prompt1 and prompt2 and uploaded_file1 and uploaded_file2:
-        # Delete the previous round first
         delete_previous_round()
 
         # Convert the images to binary data
