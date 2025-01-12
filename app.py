@@ -90,7 +90,7 @@ def main():
         <script>
         function startTimer(duration, display) {
             var timer = duration, minutes, seconds;
-            setInterval(function () {
+            var interval = setInterval(function () {
                 minutes = parseInt(timer / 60, 10)
                 seconds = parseInt(timer % 60, 10);
 
@@ -100,7 +100,7 @@ def main():
                 display.textContent = minutes + ":" + seconds;
 
                 if (--timer < 0) {
-                    timer = duration;
+                    clearInterval(interval);
                 }
             }, 1000);
         }
@@ -113,7 +113,8 @@ def main():
         </script>
 
         <body>
-        <div>Time left: <span id="time">00:30</span></div>
+            <div>Time left: <span id="time">00:30</span></div>
+        </form>
         </body>
         """
 
@@ -123,7 +124,7 @@ def main():
         st.button(label="Done", on_click=done)
 
         url = f"https://pollinations.ai/p/A very poorly drawn black and white image of a {st.session_state.prompt}, created in under 30 seconds with minimal detail. The drawing should use rough, uneven lines, simple shapes, and only basic colors. It should look like it was drawn hurriedly in a basic MSpaint, with no shading or intricate features. The background is plain white.?width=512&height=512"
-        st.session_state.img = requests.get(url)        
+        st.session_state.img = requests.get(url)
 
         
     elif st.session_state.screen == "guess":
