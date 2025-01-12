@@ -11,7 +11,10 @@ import numpy as np
 import base64
 import asyncio
 import aiohttp
-from images import is_first_player, upload_image_to_db, delete_previous_round, fetch_images_from_db
+from model import is_first_player, upload_image_to_db, delete_previous_round, fetch_images_from_db
+
+# Page icon
+#icon = Image.open('img/streamlit-mark-light.png')
 
 def play():
     # Update the screen state to "play"
@@ -37,6 +40,8 @@ def play():
         st.session_state.start_timer = True
     
 def main():
+    logo = Image.open("assets/logo.png")
+    st.image(logo)
     # Initialize the screen in session state
     if "screen" not in st.session_state:
         st.session_state.screen = "home"
@@ -162,11 +167,38 @@ def main():
                     # st.image(unblob.image_data)
                     st.session_state.otherDrawing = unblob.image_data
             time.sleep(1)
-        if random.random() < 0.5:  # 50% chance (random.random() returns a float between 0 and 1)
-            st.image(Image.open(BytesIO((st.session_state.otherImg).content)))
-            st.image(st.session_state.otherDrawing)
-        else:
-            st.image(st.session_state.otherDrawing)
-            st.image(Image.open(BytesIO((st.session_state.otherImg).content)))
-        
+
+        ai_image = Image.open(BytesIO((st.session_state.otherImg).content))
+        human_image = st.session_state.otherDrawing
+
+        # Put the images in two columns, randomized order
+        col1, col2 = st.columns(2)
+        rand = random.choice([0,1])
+        ground_truth = 'left' if rand == 0 else 'right'
+        with col1:
+            if rand == 0:
+                st.image(ai_image)
+            else:
+                st.image(human_image)
+            st.button(label="This is AI.", on_click=lambda: finish("left", ground_truth), key="left")
+        with col2:
+            if rand == 1:
+                st.image(ai_image)
+            else:
+                st.image(human_image)
+            st.button(label="This is AI.", on_click=lambda: finish("right", ground_truth), key="right")
+
+
+        def finish(answer, ground_truth):
+            """
+            Set the screen state to "finish" when the user clicks the button.
+            Show the answers.
+            """
+            st.session_state.screen = "finish"
+            if answer == ground_truth:
+                st.write("Correct!")
+            else:
+                st.write("Incorrect!")
+            st.write(f"The AI drawing is on the {ground_truth}.")
+
 main()

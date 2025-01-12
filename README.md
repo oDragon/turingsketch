@@ -29,7 +29,7 @@ This project was submitted to DeltaHacks XI!
     )
 
     INSERT INTO drawings(prompt)
-    VALUES (cat), (car)
+    VALUES ('cat'), ('car')
     ```
 
 5. Create a `.env` file in the project directory with the following content:
