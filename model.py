@@ -92,7 +92,10 @@ def is_first_player():
     """
     Returns True if the number of images in the database is NOT 1, else False.
     """
-    if len(fetch_images_from_db()) is None or len(fetch_images_from_db()) != 1:
+    try:
+        if len(fetch_images_from_db()) != 1:
+            return True
+        else:
+            return False
+    except: # Database empty
         return True
-    else:
-        return False
