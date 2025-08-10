@@ -10,8 +10,6 @@ In TuringSketch, players face off in a Turing Test-inspired game with a creative
 
 Each player receives a different prompt to draw something within 30 seconds. Meanwhile, an AI creates its own drawings based on the same prompts. When the timer runs out, players are shown the drawing their opponent made along with the AI's corresponding drawing. The challenge? Guess which image was created by the AI and which one was drawn by a human!
 
-This project was submitted to DeltaHacks XI!
-
 ## How to run
 
 1. Clone the repository:
