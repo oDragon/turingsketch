@@ -18,7 +18,7 @@ Each player receives a different prompt to draw something within 30 seconds. Mea
     ```
 2. Navigate to the project directory:
     ```bash
-    cd deltahacks11
+    cd turingsketch
     ```
 3. Install the required dependencies:
     ```bash
