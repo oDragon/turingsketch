@@ -1,4 +1,10 @@
 # TuringSketch
+###  Go head to head with your friends and draw different prompts in 30 seconds while an AI draws too.  Then, guess which image was drawn by a human and which was drawn by AI!
+Demo Video (Youtube):
+
+[![Video](http://img.youtube.com/vi/MhD8CQB7cm4/0.jpg)](https://youtu.be/MhD8CQB7cm4 "TuringSketch")
+
+Devpost: [https://devpost.com/software/idkkkkkkk](https://devpost.com/software/idkkkkkkk)
 
 In TuringSketch, players face off in a Turing Test-inspired game with a creative twist, reminiscent of [skribbl.io](https://skribbl.io/)!
 
